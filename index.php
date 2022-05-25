@@ -24,6 +24,17 @@
         margin: 0;
         padding: 0;
     }
+    .small-text{
+        font-size: 12px;
+    }
+    .block-title::after {
+    content: attr(data-title);
+    position: absolute;
+    opacity: .1;
+    font-size: 160px;
+    top: -72px;
+    left: -14px;
+}
 </style>
 <body>
     <div class="bg-dark">
@@ -141,27 +152,74 @@
                             <p>North Carolina Voter ID Law Is Upheld by Federal Judge...</p>
                         </div>
                     </div>
-                    <!-- <div style="display:grid; grid-template-columns: auto auto; column-gap: 5px">
-                        <div >
+                    <div class="row no-gutters">
+                        <div class="col-sm-6 ">
                             <img width="100%" src="http://template.themeton.com/tana/images/news/rightnow-01.jpg" alt="">
+                            <small>Dave Clark 2h</small>
                             <h3>News Flash</h3>
+                            <p>North Carolina Voter ID Law Is Upheld by Federal Judge...</p>
                         </div>
-                        <div >
-                            <img src="http://template.themeton.com/tana/images/news/rightnow-01.jpg" alt="">
+                        <div class="col-sm-6 pl-2">
+                            <img width="100%" src="http://template.themeton.com/tana/images/news/rightnow-02.jpg" alt="">
+                            <small>Dave Clark 2h</small>
                             <h3>News Flash</h3>
+                            <p>North Carolina Voter ID Law Is Upheld by Federal Judge...</p>
                         </div>
-                        <div >
-                            <img src="http://template.themeton.com/tana/images/news/rightnow-01.jpg" alt="">
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col-sm-6 ">
+                            <img width="100%" src="http://template.themeton.com/tana/images/news/rightnow-01.jpg" alt="">
+                            <small>Dave Clark 2h</small>
                             <h3>News Flash</h3>
+                            <p>North Carolina Voter ID Law Is Upheld by Federal Judge...</p>
                         </div>
-                    </div> -->
+                        <div class="col-sm-6 pl-2">
+                            <img width="100%" src="http://template.themeton.com/tana/images/news/rightnow-02.jpg" alt="">
+                            <small>Dave Clark 2h</small>
+                            <h3>News Flash</h3>
+                            <p>North Carolina Voter ID Law Is Upheld by Federal Judge...</p>
+                        </div>
+                    </div>
+                    <!-- ##################   ARTICLES BY CATEGORY #################### -->
+                    <hr>
+                    <div>
+                        <h3 class="block-title my-5" style="position: relative;" data-title="Finacials">ARTICLES</h3>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <small>Dave Clark 2h</small>
+                            <h3>News Flash</h3>
+                            <p>North Carolina Voter ID Law Is Upheld by Federal Judge...</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <small>Dave Clark 2h</small>
+                            <h3>News Flash</h3>
+                            <p>North Carolina Voter ID Law Is Upheld by Federal Judge...</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <small>Dave Clark 2h</small>
+                            <h3>News Flash</h3>
+                            <p>North Carolina Voter ID Law Is Upheld by Federal Judge...</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-sm-2">
-                    <h2 style="border-bottom: 1px solid #ccc;">Trending</h2>
-                    <div>
+                    <h3 style="border-bottom: 1px solid #ccc;">Trending</h3>
+                    <div class="mb-3">
                         <small>Dave Clark 2h</small>
-                        <h3>News Flash</h3>
-                        <p>North Carolina Voter ID Law Is Upheld by Federal Judge...</p>
+                        <h4 style="font-weight: 600;">News Flash</h4>
+                        <p class="small-text">North Carolina Voter ID Law Is Upheld by Federal Judge...</p>
+                    </div>
+                    <div class="mb-3">
+                        <small>Dave Clark 2h</small>
+                        <h4 style="font-weight: 600;">News Flash</h4>
+                        <p class="small-text">North Carolina Voter ID Law Is Upheld by Federal Judge...</p>
+                    </div>
+                    <div class="mb-3">
+                        <small>Dave Clark 2h</small>
+                        <h4 style="font-weight: 600;">News Flash</h4>
+                        <p class="small-text">North Carolina Voter ID Law Is Upheld by Federal Judge...</p>
                     </div>
                 </div>
             </div>
