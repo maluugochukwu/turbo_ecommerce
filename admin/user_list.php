@@ -13,13 +13,12 @@ include_once("libs/dbfunctions.php");
     <div class="card-body">
      <div class="row">
         <?php
-         if($_SESSION['role_id_sess'] == 002 || $_SESSION['role_id_sess'] == 001 || $_SESSION['role_id_sess'] == 003 )
+         if($_SESSION['role_id_sess'] == 005 || $_SESSION['role_id_sess'] == 001  )
          {
-        ?>
-             <div class="col-sm-2">
-                 <a class="btn btn-info" id="create_user" onclick="getModal('setup/user.php','modal_div')"  href="javascript:void(0)" data-toggle="modal" data-target="#defaultModalPrimary">Create User</a>
-             </div>
-         
+             ?>
+         <div class="col-sm-2">
+             <a class="btn btn-info" onclick="getModal('setup/user.php','modal_div')"  href="javascript:void(0)" data-toggle="modal" data-target="#defaultModalPrimary">Create User</a>
+         </div>
          <?php
          }
          ?>
@@ -34,13 +33,18 @@ include_once("libs/dbfunctions.php");
             <div class="row">
                 <div class="col-sm-12 table-responsive">
                     <table id="page_list" class="table table-striped" style="width:100%" >
+                       
                         <thead>
                             <tr role="row">
                                 <th>S/N</th>
                                 <th>Username</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
-                                <th>Branch Name</th>
+                                <th>Merchant Name</th>
+<!--
+                                <th>Resident Church</th>
+                                <th>Church Address</th>
+-->
                                 <th>Phone Number</th>
                                 <th>Role</th>
                                 <th>Email</th>
@@ -62,13 +66,6 @@ include_once("libs/dbfunctions.php");
 <!--<script src="../js/sweet_alerts.js"></script>-->
 <!--<script src="../js/jquery.blockUI.js"></script>-->
 <script>
-//    var steps = [
-//        {
-//            'click #create_user':'Click on this button to create an employee'
-//        }
-//    ]
-    runTour(menuStates.user);
-    
   var table;
   var editor;
   var op = "Users.userlist";
@@ -107,7 +104,7 @@ include_once("libs/dbfunctions.php");
     function trigUser(user,status)
     {
         var r_status = (status == 1)?"Unlock this user":"Lock this user";
-        var cnf = confirm("Are you sure you want to "+r_status+" this user?");
+        var cnf = confirm("Are you sure you want to "+r_status+" this user ?");
         if(cnf)
            {
                 $.blockUI();

@@ -1,0 +1,1 @@
+SELECT id,title,image,subtitle,page_id,cta_text,cta_link,id,created FROM banner WHERE  1 = 1  order by id asc  LIMIT 0, 10

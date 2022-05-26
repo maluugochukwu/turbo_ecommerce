@@ -130,6 +130,15 @@ function doOnLoad()
 									            </div>
 									        </div>
 									    </div>
+									    <div class="row">
+									        <div class="col-sm-6">
+									            <div class="form-group">
+									                <label class="form-label">About You</label>
+									                <textarea class="form-control" name="about_user" id="about_user" cols="30" rows="10"><?php echo $user[0]['about_user']; ?></textarea>
+									            </div>
+									        </div>
+									        
+									    </div>
 									</form>
 								</div>
 							</div>
@@ -150,7 +159,7 @@ function doOnLoad()
             statusBarWidth:"50%",
             previewHeight: "100px",
             previewWidth: "100px",
-            allowedTypes:"jpg,png,jpeg",
+            allowedTypes:"jpg,png",
             maxFileSize:1000000,
             onSelect:function(files)
             {

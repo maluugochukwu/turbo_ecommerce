@@ -3,14 +3,14 @@ ini_set( 'date.timezone', 'Africa/Lagos' );
 class dbcnx
 {
 	public $host  = "localhost";
-	//  public $user  = "acemulbe_ugo_db";
-	//  public $pass  = "#r)N.xVsfh0f";
-	//  public $db    = "acemulbe_rent_a_dress";
      public $user  = "root";
      public $pass  = "accessis4life";
-     
-     public $db    = "turbo_blog";
-
+     public $db    = "accesswebsite";
+    
+//    public $host  = "localhost";
+//     public $user  = "vuvaaShopAdmin";
+//     public $pass  = "71Bqpo*6";
+//     public $db    = "vuvaa_shop_db";
      public $myconn;
 	public function connect()
 	{

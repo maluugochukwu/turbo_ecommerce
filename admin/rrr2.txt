@@ -1,0 +1,1 @@
+"UPDATE product_variant SET name='Maroon ', price='588.00', weight_measurement ='', visibility='1', track_inventory='In Stock', stock_status='', charge='0', sku_id='', created=NOW(), posted_user='kilimanjaro@mail.com', inventory='1' WHERE id = '68' LIMIT 1 "

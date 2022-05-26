@@ -3,7 +3,6 @@ include_once("../libs/dbfunctions.php");
 $dbobject = new dbobject();
 $sql = "SELECT * FROM merchant_page_settings WHERE merchant_id = '$_SESSION[merchant_sess_id]'";
 $settings = $dbobject->db_query($sql);
-
 if(isset($_GET['operation']))
 {
     $operation = "edit";

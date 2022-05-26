@@ -1,0 +1,1 @@
+{"upfile":{"name":"flight_memo.docx","type":"application\/vnd.openxmlformats-officedocument.wordprocessingml.document","tmp_name":"C:\\Windows\\Temp\\php3D32.tmp","error":0,"size":22358}}

@@ -5,7 +5,8 @@ $dbobject = new dbobject();
 $sql_ch_type = "SELECT id,name FROM church_type";
 $church_type = $dbobject->db_query($sql_ch_type);
 
-$sql_role = "SELECT * FROM role WHERE 1 = 1 order by role_name";
+$role_filter = ($_SESSION['role_id_sess'] == "001")?"":" AND role_id <> '001'";
+$sql_role = "SELECT * FROM role WHERE 1 = 1 $role_filter order by role_name";
 $roles = $dbobject->db_query($sql_role);
 
 
@@ -56,7 +57,7 @@ function doOnLoad()
                  <?php
                       foreach($roles as $row)
                       {
-                          echo "<option value='".$row[role_id]."'>".$row[role_name]."</option>";
+                          echo "<option value='".$row['role_id']."'>".$row['role_name']."</option>";
                       }
                   ?>
               </select>

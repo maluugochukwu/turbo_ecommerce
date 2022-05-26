@@ -1,0 +1,4 @@
+<?php
+$dd = '{"data":[{"id_customer_address_city":"8","name":"ABOBO"},{"id_customer_address_city":"27","name":"AJAOKUTA"},{"id_customer_address_city":"43","name":"ANKPA"},{"id_customer_address_city":"52","name":"AYANGBA"},{"id_customer_address_city":"110","name":"IDAH"},{"id_customer_address_city":"157","name":"ITAKPE"},{"id_customer_address_city":"1039","name":"KABBA"},{"id_customer_address_city":"2645","name":"Lokoja"},{"id_customer_address_city":"198","name":"LOKOJA-CENTRAL LOCATIONS"},{"id_customer_address_city":"230","name":"OBAJANA"},{"id_customer_address_city":"246","name":"OKENNE"}]}';
+
+var_dump(json_decode($dd,TRUE));

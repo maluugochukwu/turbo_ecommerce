@@ -17,7 +17,7 @@ $dotenv->load();
 	<meta name="author" content="Vuvaa">
 
 <!--	<title>Vuvaa Shop</title>-->
-	<title>RENT A DRESS</title>
+	<title>Store 200</title>
 	<link rel="stylesheet" href="css/parsley.css">
 	<link rel="preconnect" href="http://fonts.gstatic.com/" crossorigin>
 <!--	<link rel="icon" href="img/icon.png" sizes="32x32" />-->
@@ -38,7 +38,7 @@ $dotenv->load();
 <!-- Global site tag (gtag.js) - Google Analytics -->
 </head>
 
-<body style="background: #77d39c" >
+<body style="background: #639de2">
 	<main class="main d-flex w-100">
 		<div class="container d-flex flex-column">
 			<div class="row h-100">
@@ -56,7 +56,7 @@ $dotenv->load();
 							<div class="card-body">
 								<div class="m-sm-4">
 									<div class="text-center">
-<!--										<img src="img/logo_1.png" alt="Chris Wood" class="img-fluid" width="132" height="132" />-->
+										<img src="img/572.png" alt="Chris Wood" class="img-fluid" width="132" height="132" />
 									</div>
 									<form id="form1">
 										<input type="hidden" name="op" value="Users.generatePwdLink">

@@ -1,0 +1,1 @@
+insert into blog_tag (blog_id,tag,created) VALUES ('12','Specialist','2022-05-26 11:36:54')

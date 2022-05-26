@@ -1,10 +1,12 @@
 <?php
 session_start();
+
 header("strict-transport-security: max-age=600");
 header('X-Frame-Options: SAMEORIGIN');
 header("Pragma: no-cache");
 // ini_set( 'session.cookie_httponly', 1 );
 // ini_set('session.cookie_secure', 1);
+
 if(!isset($_SESSION['username_sess']))
 {
     header('location: logout.php');
@@ -19,6 +21,7 @@ require_once('vendor/autoload.php');
 $dotenv = Dotenv\Dotenv::createImmutable("./");
 $dotenv->load();
 include_once("libs/dbfunctions.php");
+
 // use Mailgun\Mailgun;
 // use Aws\S3\S3Client;  
 // use Aws\Exception\AwsException;
@@ -69,6 +72,7 @@ $data   = [$params];
 
 $foo = new $operation[0];
 echo call_user_func_array(array($foo, trim($operation[1])), $data);
+
 //}else
 //{
 //	echo "invalid token";

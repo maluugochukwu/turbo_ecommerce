@@ -1,0 +1,1 @@
+SELECT Lga,Lgaid FROM lga WHERE state_code = '02'   order by Lga

@@ -6,8 +6,8 @@ $states = $dbobject->db_query($sql);
 
 
 $user_role = $_SESSION['role_id_sess'];
-$special_role = ($user_role == "001")?"":"002";
-$sql_role = "SELECT * FROM role WHERE role_id NOT IN ('001','$user_role','$special_role') ";
+$sql_role = "SELECT * FROM role WHERE role_id NOT IN ('001','$user_role') ";
+
     
     $roles = $dbobject->db_query($sql_role);
 
@@ -21,8 +21,6 @@ else
 {
     $operation = 'new';
 }
-$sql = "SELECT * FROM region";
-$region_list = $dbobject->db_query($sql);
 ?>
  <link rel="stylesheet" href="codebase/dhtmlxcalendar.css" />
 <script src="codebase/dhtmlxcalendar.js"></script>
@@ -35,7 +33,6 @@ function doOnLoad()
    myCalendar.hideTime();
 }
 </script>
-
 <style>
     #login_days>label{
         margin-right: 10px;
@@ -121,42 +118,28 @@ function doOnLoad()
             <div class="col-sm-6">
                <div class="form-group">
                     <label class="form-label">Role<span class="asterik">*</span></label>
-                    <select onchange="show_bank_details(this.value)" class="form-control" name="role_id" id="role_id">
+                    <select  class="form-control" name="role_id" id="role_id">
                        
                         <?php
-                        
+                        if($operation == "new")
+                        {
                             echo '<option value="">::SELECT USER ROLE::</option>';
                             foreach($roles as $row)
                             {
                                 $selected = ($user[0]['role_id'] == $row['role_id'])?"selected":"";
                                 echo "<option $selected value='".$row[role_id]."'>".$row['role_name']."</option>";
                             }
-                       
+                        }else
+                        {
+                            echo "<option value='".$user[0]['role_id']."'>".$dbobject->getitemlabel('role','role_id',$user[0]['role_id'],'role_name')."</option>";
+                        }
                         
                         ?>
                     </select>
                 </div>
            </div>
-           <div class="col-sm-6" style="<?php echo ($user[0]['role_id'] == 002)?'display:none':'display:block' ?>" id="branch_div">
-               <label for="">Region</label>
-               <select name="region" id="region" class="form-control">
-                   <?php
-                   if(count($region_list)>0)
-                   {
-                        foreach($region_list as $row)
-                        {
-                            echo "<option value='$row[country_id]'>".$dbobject->getitemlabel('country','id',$row['country_id'],'name')."</option>";
-                        }
-                   }else
-                   {
-                       echo "<option value=''>KINDLY CREATE A REGION</option>";
-                   }
-                   
-                   ?>
-               </select>
-           </div>
         </div>
-        
+       
         <div id="parish_pastor_div" >
  
         </div>
@@ -196,13 +179,6 @@ function doOnLoad()
             </div>
             
         </div>
-<!--
-        <div class="row">
-            <div class="col-sm-12">
-                <div id="editor" ></div>
-            </div>
-        </div>
--->
         <div class="row">
             <div class="col-sm-12">
                 <div id="server_mssg"></div>
@@ -211,52 +187,6 @@ function doOnLoad()
         <button id="save_facility" onclick="saveRecord()" class="btn btn-primary">Submit</button>
     </form>
 </div>
-<!--<script src="https://cdn.ckeditor.com/ckeditor5/27.0.0/classic/ckeditor.js"></script>-->
-<script src="js/ckeditor.js"></script>
-
-<script>
-    $(document).ready(()=>{
-//        ClassicEditor
-//        .create( document.querySelector( '#editor' ), {
-//				
-//				toolbar: {
-//					items: [
-//						'heading',
-//						'|',
-//						'bold',
-//						'italic',
-//						'link',
-//						'bulletedList',
-//						'numberedList',
-//						'|',
-//						'outdent',
-//						'indent',
-//						'|',
-//						'blockQuote',
-//						'insertTable',
-//						'undo',
-//						'redo'
-//					]
-//				},
-//				language: 'en',
-//				table: {
-//					contentToolbar: [
-//						'tableColumn',
-//						'tableRow',
-//						'mergeTableCells'
-//					]
-//				},
-//				licenseKey: '',
-//				
-//				
-//			} )
-//			.then( editor => {
-//				window.editor = editor;
-//		
-//    })
-    })
-    
-</script>
 <script>
     function saveRecord()
     {
@@ -268,7 +198,6 @@ function doOnLoad()
             $("#save_facility").text("Save");
             if(re.response_code == 0)
                 {
-                    menuStates.user.isSaved = 1;
                     $("#server_mssg").text(re.response_message);
                     $("#server_mssg").css({'color':'green','font-weight':'bold'});
                     getpage('user_list.php','page');
@@ -290,12 +219,12 @@ function doOnLoad()
         }
     function show_bank_details(val)
     {
-        if(val == 002)
+        if(val == 006)
             {
-                $("#branch_div").hide();
+                $("#delivery_company").show();
             }
         else{
-            $("#branch_div").show();
+            $("#delivery_company").hide();
         }
     }
     function fetchLga(el)

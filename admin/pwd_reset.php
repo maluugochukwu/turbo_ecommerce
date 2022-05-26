@@ -17,7 +17,7 @@ if($result['response_code'] != "0")
 ?>
  <link rel="stylesheet" href="codebase/dhtmlxcalendar.css" />
 <script src="codebase/dhtmlxcalendar.js"></script>
-<title>RENT A DRESS: Password Reset</title>
+<title>STORE 200: Password Reset</title>
 	<link rel="stylesheet" href="css/parsley.css">
 	<link rel="preconnect" href="http://fonts.gstatic.com/" crossorigin>
 	<link rel="icon" href="img/icon.png" sizes="32x32" />
@@ -51,7 +51,7 @@ function doOnLoad()
 					<div class="d-table-cell align-middle">
 
 						<div class="text-center mt-4">
-							<h1 class="h2" style="color:#000">Welcome <?php echo $result['data']['lastname']." ".$result['data']['firstname'] ?> to RENT A DRESS</h1>
+							<h1 class="h2" style="color:#000">Welcome <?php echo $result['data']['lastname']." ".$result['data']['firstname'] ?> to STORE 200</h1>
 <!--
 							<p class="lead" style="color:#fff">
 								Sign in to your account

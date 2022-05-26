@@ -36,11 +36,6 @@ class engine extends dbobject
 		$result   = $this->db_query($sql);
 		
 		$sql_without_limit = "SELECT COUNT({$columner[0][db]}) AS counter FROM $table_name WHERE ".$this->prepareSearch($columner,$this->search).$this->date_filter($start_date,$end_date).$filter." order by ".$columner[$this->order]['db']." ".$this->dirs;
-        
-        
-		$excel_sql = "SELECT $fields FROM $table_name WHERE ".$this->prepareSearch($columner,$this->search).$this->date_filter($start_date,$end_date).$filter." order by ".$columner[$this->order]['db']." ".$this->dirs;
-        
-        $_SESSION['sql_without_limit'] = $excel_sql;
         file_put_contents('g_query2.txt',$sql_without_limit);
         
 		
@@ -223,6 +218,7 @@ public function display_data($result,$columner,$sql_without_limit,$pk,$start)
         
         
         return $columns == ""?" 1 = 1 ":"(".$columns.") AND 1 = 1 ";
+//        return $columns == ""?" 1 = 1 ":$columns." AND 1 = 1 ";
     }
     
     

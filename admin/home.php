@@ -1,22 +1,16 @@
 <?php
-session_start();
 require_once('vendor/autoload.php');
 $dotenv = Dotenv\Dotenv::createImmutable("./");
 $dotenv->load();
 
+//echo $_ENV['TOKEN_SECRET_KEY']; 
+//echo PHP_VERSION_ID;
+//\Dotenv\Dotenv::create(__DIR__)->load();
+//$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 require_once('libs/dbfunctions.php');
 if(!isset($_SESSION['username_sess']))
 {
     header('location: logout.php');
-}
-if(!isset($_COOKIE['tour_state']))
-{
-    $tour_state = "yes";
-    setcookie('tour_state',$tour_state,time()+(86400 * 300),'/');
-    
-}else
-{
-    $tour_state = $_COOKIE['tour_state'];
 }
 
 require_once('class/menu.php');
@@ -27,7 +21,6 @@ $menu_list = $menu_list['data'];
 $dbobject = new dbobject();
 $sql = "SELECT bank_name,account_no,account_name FROM userdata WHERE username = '$_SESSION[username_sess]' LIMIT 1 ";
 $user_det = $dbobject->db_query($sql);
-
 ?>
 <!DOCTYPE html>
 <html lang="en" >
@@ -46,7 +39,7 @@ $user_det = $dbobject->db_query($sql);
 <!--	<title>200 Store</title>-->
 
     <link rel="preconnect" href="http://fonts.gstatic.com/" crossorigin>
-<!--    <link rel="icon" href="https://www.store200.com/assets/images/logo-green-black-text.png" sizes="32x32" />-->
+    <link rel="icon" href="img/favicon.ico" sizes="32x32" />
     <link rel="stylesheet" href="codebase/dhtmlxcalendar.css" />
     <link rel="stylesheet" href="css/owl.carousel.css" />
     <link rel="stylesheet" href="css/owl.theme.css" />
@@ -57,7 +50,6 @@ $user_det = $dbobject->db_query($sql);
 	<!-- <link href="css/classic.css" rel="stylesheet"> -->
 	<!-- <link href="css/corporate.css" rel="stylesheet"> -->
 	<!-- <link href="css/modern.css" rel="stylesheet"> -->
-	<link href="css/zoomove.min.css" rel="stylesheet">
 
 	<!-- BEGIN SETTINGS -->
 	<!-- You can remove this after picking a style -->
@@ -85,8 +77,8 @@ $user_det = $dbobject->db_query($sql);
 		<nav  class="sidebar" <?php if($_SESSION['role_id_sess'] == "003" && ($user_det[0]['account_no'] == "00000000000" || $user_det[0]['bank_name'] == "00")){ echo "style='display:none'"; } ?> >
 			<div class="sidebar-content ">
 				<a class="sidebar-brand" target="_blank" href="#">
-                 <div align="center"><img src="img/log.jpg" style="max-width: 40%" alt="<?php echo $_ENV['APPLICATION_NAME'] ?> Logo"></div>
-                 <h4 align="center"><?php echo $_ENV['APPLICATION_NAME']  ; ?></h4>
+                 <div align="center"><img src="<?php echo ($_SESSION['role_id_sess'] == "001" || $_SESSION['role_id_sess'] == "005")?"img/572.png":$dbobject->getitemlabel('merchant_reg','merchant_id',$_SESSION['merchant_sess_id'],'merchant_logo'); ?>" style="max-width: 40%" alt="<?php echo $_ENV['APPLICATION_NAME'] ?> Logo"></div>
+                 <h4 align="center"><?php echo $_ENV['APPLICATION_NAME'] ?></h4>
                 </a>
                 
 				<ul class="sidebar-nav">
@@ -97,7 +89,7 @@ $user_det = $dbobject->db_query($sql);
                         <a style="margin-top:0" href="javascript:window.location='logout.php'" class="d-inline-block d-sm-none btn btn-danger btn-block">
                             Logout
                         </a>
-						<a href="home.php" data-toggle="" class="sidebar-link collapsed dashboard">
+						<a href="home.php" data-toggle="" class="sidebar-link collapsed">
               				 <span class="align-middle">Dashboard</span>
             			</a>
 						
@@ -105,7 +97,7 @@ $user_det = $dbobject->db_query($sql);
                         foreach($menu_list as $row)
                         {
                         ?>
-                            <a  href="#k<?php echo $row['menu_id']; ?>" id="<?php echo $row['menu_id']; ?>" data-toggle="collapse" class="sidebar-link collapsed">
+                            <a  href="#k<?php echo $row['menu_id']; ?>" data-toggle="collapse" class="sidebar-link collapsed">
                                 <i class="align-middle <?php echo $row['icon']; ?>" ></i> <span class="align-middle"><?php echo $row['menu_name']; ?></span>
                             </a>
                             <?php
@@ -114,13 +106,13 @@ $user_det = $dbobject->db_query($sql);
                                     echo '<ul id="k'.$row['menu_id'].'"   class="sidebar-dropdown list-unstyled collapse" >';
                                     foreach($row['sub_menu'] as $row2)
                                     {
-                                        if($row2['menu_id'] == "2dss5")
+                                        if($row2['menu_id'] == "026")
                                         {
 //                                            if($_SESSION['role_id_sess'] == 001 || $_SESSION['church_type_id_sess'] == 1)
 //                                            {
                                        
                             ?>
-                                            <li class="sidebar-item" id="<?php echo $row2['menu_id']; ?>"><a class="sidebar-link"  ><?php echo $row2['name']; ?></a>
+                                            <li class="sidebar-item"><a class="sidebar-link"  href="javascript:getpage('<?php echo $row2['menu_url']; ?>','page')"><?php echo $row2['name']; ?></a>
                                             </li>
                             <?php
 //                                            }
@@ -129,7 +121,7 @@ $user_det = $dbobject->db_query($sql);
                                         {
                                       
                             ?>
-                                            <li class="sidebar-item" id="<?php echo $row2['menu_id']; ?>" >
+                                            <li class="sidebar-item" >
                                                 <a class="sidebar-link" href="javascript:getpage('<?php echo $row2['menu_url']; ?>','page')">
                                                     <?php echo $row2['name']; ?>
                                                 </a>
@@ -171,22 +163,7 @@ $user_det = $dbobject->db_query($sql);
                 </a>
                 <a href="javascript:void(0)" class="d-flex mr-2" >
                     Your Role: &nbsp; <span style="font-weight:bold; color:#000"><?php  echo $dbobject->getitemlabel('role','role_id',$_SESSION['role_id_sess'],'role_name');?></span>
-                </a>&nbsp; &nbsp; | &nbsp; &nbsp; 
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" <?php echo ($tour_state == "yes")?"checked":""; ?> class="custom-control-input" id="customSwitch1">
-                    <label class="custom-control-label" id="tour_label" for="customSwitch1"><?php echo ($tour_state == "yes")?"Turn off tour":"Turn on tour"; ?></label>
-                </div>
-                <?php
-                if($_SESSION['role_id_sess'] != '001' && $_SESSION['role_id_sess'] != '002')
-                {
-                ?>
-                &nbsp; &nbsp; | &nbsp; &nbsp; 
-                <a href="javascript:void(0)" class="d-flex mr-2" >
-                    Region: &nbsp; <span style="font-weight:bold; color:#000"><?php  echo $dbobject->getitemlabel('country','id',$_SESSION['region_sess'],'name');?></span>
                 </a>
-                <?php
-                }
-                ?>
 				<div class="navbar-collapse collapse">
 					<ul class="navbar-nav ml-auto">
 						
@@ -211,40 +188,7 @@ $user_det = $dbobject->db_query($sql);
 
 			<main class="content" id="page">
 				<div class="container-fluid p-0">
-					<div class="row">
-						<div class="col-12 col-lg-6">
-							<div class="card" >
-								<div class="card-header">
-									<h5 class="card-title new_btn">Area Chart</h5>
-									<h6 class="card-subtitle text-muted">Total Sales Count and Total Revenue comparison.</h6>
-								</div>
-								<div class="card-body">
-									<div class="chart">
-										<canvas id="apexcharts-area"></canvas>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-12 col-lg-6">
-                            <div class="card flex-fill w-100">
-								<div class="card-header">
-									
-									<h5 class="card-title">Bar Chart</h5>
-									<h6 class="card-subtitle text-muted">Transaction chart for last year and this year.</h6>
-								</div>
-								<div class="card-body">
-									<div class="chart">
-										<canvas id="chartjs-bar"></canvas>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div id="containers" style="width:100%; height:850px"></div>
-                        </div>
-                    </div>
+					
 					<div class="row">
 <!--
                    <div class="col-12 col-lg-6">
@@ -260,61 +204,7 @@ $user_det = $dbobject->db_query($sql);
                         </div>
                     </div>
 -->
-                    <div class="col-sm-12 " style="padding-top:50px">
-                        
-							<div class="card flex-fill">
-								<div class="card-header">
-									
-									<h5 class="card-title mb-0" onclick='doEnjoy()'>5 Recent Sales</h5>
-								</div>
-                            <div id="datatables-dashboard-projects_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-6"></div>
-                                    <div class="col-sm-12 col-md-6"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                       <div class="table-responsive" >
-                                        <table id="datatables-dashboard-projects" class="table table-striped my-0 dataTable no-footer" role="grid" aria-describedby="datatables-dashboard-projects_info">
-                                            <thead>
-                                                <tr role="row">
-                                                    <th>Branch Name</th>
-                                                    <th>Amount</th>
-                                                    <th>Date</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php
-//                                                $merchant_id = $_SESSION['merchant_details']['merchant_id'];
-//                                                $filter = ($_SESSION['role_id_sess'] == 001)?"":" AND source_acct = '$merchant_id'";
-                                                $filter = "";
-                                                $sql = "SELECT * FROM transaction_table WHERE 1 = 1 $filter ORDER BY created desc LIMIT 5";
-                                                $result = $dbobject->db_query($sql);
-                                                if(count($result) > 0)
-                                                {
-                                                    foreach($result as $row)
-                                                    {
-                                            ?>
-                                                        <tr>
-                                                            <td><?php echo $dbobject->getitemlabel("branch","id",$row['branch_id'],"name"); ?></td>
-                                                            <td><?php echo "&#x20a6; ".number_format($row['transaction_amount'],2); ?></td>
-                                                            <td><?php echo date("F jS, Y", strtotime($row['created'])); ?></td>
-                                                        </tr>
-                                            <?php
-                                                    }
-                                                }else
-                                                {
-                                                    echo "<tr><td>No record found</td></tr>";
-                                                }
-                                            ?>
-                                            </tbody>
-                                        </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-							</div>
-						</div>
+                    
 					
 						
 					</div>
@@ -352,14 +242,11 @@ $user_det = $dbobject->db_query($sql);
         }
     </style>
 <link rel="stylesheet" href="codebase/dhtmlxcalendar.css" />
-<link rel="stylesheet" href="css/bootstrap-tour-standalone.min.js" />
 <script src="codebase/dhtmlxcalendar.js"></script>
 <script src="js/owl.carousel.js"></script>
 	<script src="js/cart.js"></script>
-	<script src="js/bootstrap-tour-standalone.min.js"></script>
 	
 	<script>
-        
         
 	</script>
 	<script>
@@ -374,22 +261,22 @@ $(function() {
     
                 
 			// Bar chart
-            $.post('utilities.php',{op:'Dashboard.transactionHistoryPreviousNow'},function(dd){
-                console.log('record from dashbord ',dd);
-                new Chart(document.getElementById("chartjs-bar"),dd)
-            },'json')
+//            $.post('utilities.php',{op:'Dashboard.transactionHistoryPreviousNow'},function(dd){
+//                console.log('record from dashbord ',dd);
+//                new Chart(document.getElementById("chartjs-bar"),dd)
+//            },'json')
 //			new Chart(document.getElementById("chartjs-bar"), );transactionHistoryPreviousNow
 		});
 	</script>
 	<script>
-        $.post('utilities.php',{op:'Dashboard.transactionCountSales'},function(dd){
-                console.log('record from dashbord ',dd);
-                new Chart(document.getElementById("apexcharts-area"),dd)
-            },'json')
+//        $.post('utilities.php',{op:'Dashboard.transactionCountSales'},function(dd){
+//                console.log('record from dashbord ',dd);
+//                new Chart(document.getElementById("apexcharts-area"),dd)
+//            },'json')
 
 	</script>
 
-<div class="modal fade" id="defaultModalPrimary" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="defaultModalPrimary" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content" id="modal_div">
             <div class="modal-header">
@@ -431,285 +318,82 @@ $(function() {
 <script src="js/highmaps.js"></script>
 <script src="js/exporting.js"></script>
 <script src="js/ng-all.js"></script>
+<script src="js/intro.min.js"></script>
 
- <script src="js/intro.min.js"></script>
 <script src="js/kinetic.js"></script>
 <script src="js/enjoyhint.js"></script>
 <script src="js/jquery.scrollTo.min.js"></script>
-<style>
-    
-</style>
 <script>
-    var tour_state             = "<?php echo $tour_state; ?>";
-    function detectMob() {
-    var frew = ( ( window.innerWidth <= 800 ) || ( window.innerHeight <= 600 ) );
-    if(frew)
-    {
-        swal({
-            title:"Notice",
-            icon:"info",
-            text:"To use the tour guide, kindly view this page from a wider screen"
-        })
-        // alert("To use the tour guide, kindly view this page from a wider screen")
-    }
-    return frew;
-  }
-  tour_state = (detectMob())?"no":tour_state;
-    var menuStates = {
-        'branch':
-            {
-                isSaved:0,
-                step:
-                    {
-                        default:[
-                            {
-                                'click #branch_btn' : 'Click this button to start creating your branch',
-                            }
-                        ],
-                        alt:[
-                            {
-                                'next .table-responsive' : 'You can find the record for the branch here. Click the next button to continue',
-                            },
-                            {
-                                'click #006' : 'Next step is to create your Users/Employees. Now click on the "User Setup" button',
-                            }
-                        ],
-                        
-                    }
-            },
-        'branchSetup':
-            {
-                isSaved:0,
-                step:
-                    {
-                        default:[
-                            {
-                                'click #modal_div' : 'Fill the form correctly and click the save button',
-                            }
-                        ],
-                        alt:[],
-                    }
-            },
-        'user':
-            {
-                isSaved:0,
-                step:
-                    {
-                        default:[
-                            {
-                                'click #create_user':'Click on this button to create an employee'
-                            }
-                        ],
-                        alt:[
-                            {
-                                'next .table-responsive' : 'You can find the record for the employee here. Click the next button to continue',
-                            },
-                            {
-                                'click #016' : 'Click the Activities menu.',
-                            },
-                            {
-                                'click #24' : 'First Let\'s create packages that will be used for the dress. ',
-                            }
-                        ]
-                    }
-            },
-        'dashboard':
-            {
-                isSaved:0,
-                step:
-                    {
-                        default:[
-                            {
-                                'next .navbar' : '<div  align="center"><img class="rounded-circle" src="img/avatars/avatar-5.jpg" width="200" height="200" /><div>Hello there, my name is Jane.<br/> I will be your guide. Click the "Next" button below to continue</div></div>',
-
-                            },
-                            {
-                                'click #004' : 'Click the "System Setup" button to reveal other menus',
-
-                            },
-                            {
-                                'click #25' : 'We first need to create a branch. click the "Branch List" button',
-                            }
-                        ],
-                        alt:[]
-                    }
-            },
-        'package':
-            {
-                isSaved:0,
-                step:
-                    {
-                        default:[
-                            {
-                                'click #package_btn':'Click on this button to create a package'
-                            }
-                        ],
-                        alt:[
-                            {
-                                'next .table-responsive' : 'You can find the record for the pacakage here. Click the next button to continue',
-                            },
-                            {
-                                'click #19' : 'Now let\'s create the dress. Click the button to continue',
-                            }
-                        ]
-                    }
-            },
-    }
-    var never_guess_var_branch = 0;
-    function runTour(menu)
-    {
-        
-        if(tour_state == "yes")
-        {
-            var enjoyhint_instance = new EnjoyHint({});
-            var steps = (menu.isSaved == "0")?menu.step.default:menu.step.alt;
-//            console.log(steps);
-            enjoyhint_instance.set(steps);
-            enjoyhint_instance.run();
-        }
-    }
-
     
-    runTour(menuStates.dashboard);
-    
-    var data;
-    
-    
-   $("#customSwitch1").click(()=>{
-       var conf = confirm("Your page will refresh. Do you want to continue?")
-       if(conf)
-       {
-           if($("#customSwitch1").is(":checked"))
-           {
-               var state = "yes";
-               var oo = new Date();
-               oo.setTime(oo.getTime() + (300 *24*60*60*1000));
-               var expires = oo.toUTCString();
-               document.cookie = "tour_state="+state+";"+expires+";path=/";
-               tour_state = state;
-
-           }
-           else
-           {
-               var state = "no";
-               var oo = new Date();
-               oo.setTime(oo.getTime() + (300 *24*60*60*1000));
-               var expires = oo.toUTCString();
-               document.cookie = "tour_state="+state+";"+expires+";path=/";
-               tour_state = state;
-           }
-           window.location = "home.php";
-        }else{
-            if($("#customSwitch1").is(":checked"))
-                {
-                    $("#customSwitch1").prop('checked',false);
-                }else{
-                    $("#customSwitch1").prop('checked',true);
-                }
-            
-        }
-   })
-
-    async function ht()
-    {
-        await $.post('utilities.php',{op:'Dashboard.stateHeatMap'},function(dd){
-             },'json').then((ee)=>{
-
-            data = ee.data
-
-
-        });
-        return data
-    }
-    
-   ht().then((ee)=>{ console.log(JSON.stringify(ee))
-    Highcharts.mapChart('containers', {
-    chart: {
-        map: 'countries/ng/ng-all'
-    },
-
-    title: {
-        text: 'Sales count across Nigeria'
-    },
-
-    subtitle: {
-        text: 'Source map: <a href="#">My Blog</a>'
-    },
-
-    mapNavigation: {
-        enabled: true,
-        buttonOptions: {
-            verticalAlign: 'bottom'
-        }
-    },
-
-    colorAxis: {
-        min: 0
-    },
-
-    series: [{
-        data: ee,
-        name: 'Sales Count',
-        states: {
-            hover: {
-                color: '#BADA55'
-            }
-        },
-        dataLabels: {
-            enabled: true,
-            format: '{point.name}'
-        }
-    }]
-});
-                    })
-
-//                     jQuery(document).ready(function($) {
-
-// if (window.history && window.history.pushState) {
-
-//   window.history.pushState('forward', null, './home.php');
-//   window.history.pushState('forward', null, './home.php');
-
-//   $(window).on('popstate', function() {
-//     alert('Back button was pressed.');
-//   });
-
-// }
-// });
+//    var data;
+//    
+//
+//    async function ht()
+//    {
+//        await $.post('utilities.php',{op:'Dashboard.stateHeatMap'},function(dd){
+//             },'json').then((ee)=>{
+//
+//            data = ee.data
+//
+//
+//        });
+//        return data
+//    }
+//    
+//   ht().then((ee)=>{ console.log(JSON.stringify(ee))
+//    Highcharts.mapChart('containers', {
+//    chart: {
+//        map: 'countries/ng/ng-all'
+//    },
+//
+//    title: {
+//        text: 'Sales count across Nigeria'
+//    },
+//
+//    subtitle: {
+//        text: 'Source map: <a href="http://store200.com">Store200</a>'
+//    },
+//
+//    mapNavigation: {
+//        enabled: true,
+//        buttonOptions: {
+//            verticalAlign: 'bottom'
+//        }
+//    },
+//
+//    colorAxis: {
+//        min: 0
+//    },
+//
+//    series: [{
+//        data: ee,
+//        name: 'Sales Count',
+//        states: {
+//            hover: {
+//                color: '#BADA55'
+//            }
+//        },
+//        dataLabels: {
+//            enabled: true,
+//            format: '{point.name}'
+//        }
+//    }]
+//});
+//                    })
 //    $(document).ready(function(){
 //        introJs().start();
 //    })
     
     //initialize instance
 //    var enjoyhint_instance = new EnjoyHint({});
-//   
+//
 //    //simple config. 
 //    //Only one step - highlighting(with description) "New" button 
 //    //hide EnjoyHint after a click on the button.
 //    var enjoyhint_script_steps = [
-//        {
-//            'click #004' : 'Click the "System Setup" button to reveal other menus',
-//        },
-//        {
-//            'click #25' : 'Click the "Branch List" button to start creating your branch',
-//           
-//            'onBeforeStart':function(){
-//                getpage('branch_list.php','page')
-//              }
-//            
-//        },
-//        {
-//            'click #branch_btn' : 'The "Create New Branch" button will pop up an interface to input details for the branch',
-//            
-////            'onBeforeStart':function(){
-////                $("#branch_btn").click()
-////            }
-//        },
-//        {
-//            'click #modal_div' : 'Fill the form correctly and click on the save button',
-////            'trigger':'skip'
-////            'timeout':3000
-//        }
+//      {
+//        'click .new_btn' : 'Click the "New" button to start creating your project'
+//      }  
 //    ];
 //
 //    //set script config

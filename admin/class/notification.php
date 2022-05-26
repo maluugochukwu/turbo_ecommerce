@@ -53,6 +53,8 @@ class Notification extends dbobject
         if(!$validation['error'])
         {
             $data['created'] = date('Y-m-d h:i:s');
+            // $data['merchant_id'] = $_SESSION['merchant_sess_id'];
+            $data['posted_user'] = $_SESSION['username_sess'];
             
             if($data['operation'] == "new")
             {

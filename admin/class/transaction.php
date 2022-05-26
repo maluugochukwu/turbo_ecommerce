@@ -8,175 +8,34 @@ class Transaction extends dbobject
 		$primary_key   = "transaction_id";
 		$columner = array(
 			array( 'db' => 'transaction_id', 'dt' => 0 ),
-			array( 'db' => 'transaction_id', 'dt' => 1,'formatter'=>function($d,$row){
-                $sql    = "SELECT id from log_table WHERE table_id = '$d' ";
-                $result = $this->db_query($sql);
-                $count = count($result);
-                $count_display = ($count > 0)?"":"display:none";
-                return "<b>".$d."</b><div><span style='cursor:pointer' class='badge badge-info' onclick=\"printer('$d')\"><i class='fa fa-print'></i> print receipt</span> &nbsp; <span style='cursor:pointer;$count_display' class='badge badge-primary' onclick=\"getpage('log_list.php?table_id=$d','page')\"><i class='fa fa-user'></i> This record was updated $count time(s)</span></div>";
-            }),
-            array( 'db' => 'transaction_amount', 'dt' => 2,'formatter'=>function($d,$row){
-                $bb =($row['is_discounted'] == "1")?"<div><small class='badge badge-warning'>Discounted</small></div>":"";
-                $cc =($row['is_payment_full'] == "no")?'<div><small onclick="getModal(\'setup/complete_payment.php?id='.$row[transaction_id].'&dress_id='.$row['dress_id'].'\',\'modal_div\')" style="cursor:pointer"  href="javascript:void(0)" data-toggle="modal" data-target="#defaultModalPrimary" class="badge badge-danger">Partial payment</small></div>':"";
-                return "&#8358; ".number_format($d,2).$bb.$cc;
-//                
-            }),
-            array( 'db' => 'source_acct', 'dt' => 3,'formatter'=>function($d,$row){
-                return '<span style="cursor:pointer" class="badge badge-secondary" onclick="getModal(\'customer_details.php?id='.$d.'\',\'modal_div\')"  href="javascript:void(0)" data-toggle="modal" data-target="#defaultModalPrimary"><i class="fa fa-eye"></i> '.$d.'</span>';
-            }),
-//            array( 'db' => 'destination_acct', 'dt' => 4),
-            array( 'db' => 'dress_id', 'dt' => 4,'formatter'=>function($d,$row){
-                $is_collected = ($row['is_collected'] == "1")?"<span class='badge badge-success'>Collected</span>":"<span class='badge badge-danger'>Not Collected</span>";
-                return "<b style='font-size:16px'>".$this->getitemlabel('dress','id',$d,'name')."</b><div>".$is_collected."</div>";
-            }),
-            array( 'db' => 'dress_amount', 'dt' => 5,'formatter'=>function($d,$row){
-//                return "&#8358; ".number_format($d,2);
-                $actual_dress_price = $this->getitemlabel('dress','id',$row['dress_id'],'price');
-                $rtt = ($row['is_discounted'] == "1")?"<b>".number_format($row['discount_price'])."</b><br /><strike style='color:red'>".number_format($actual_dress_price)."</strike>":number_format($d);
-                return "&#8358; ".$rtt;
-            }),
-            array( 'db' => 'caution_fee',     'dt' => 6,'formatter'=>function($d,$row){
-                return "&#8358; ".number_format($d,2);
-            }),
-            array( 'db' => 'region',  'dt' => 7, 'formatter'=>function($d,$row){
-                return $this->getitemlabel("country","id",$d,"name");
-            }),
-            
-            array( 'db' => 'branch_id',     'dt' => 8,'formatter'=>function($d,$row){
-                return $this->getitemlabel('branch','id',$d,'name');
-            }),
-            array( 'db' => 'pickup_date', 'dt' => 9,'formatter'=>function($d,$row){
-                return date("F jS, Y",strtotime($d));
-            }),
-            array( 'db' => 'return_date', 'dt' => 10,'formatter'=>function($d,$row)
+			array( 'db' => 'transaction_id', 'dt' => 1),
+            array( 'db' => 'transaction_amount', 'dt' => 2),
+            array( 'db' => 'source_acct', 'dt' => 3),
+            array( 'db' => 'destination_acct', 'dt' => 4,'formatter'=>function($d,$row)
               {
-                  
-                  return date("F jS, Y",strtotime($d));
+                  return $this->getitemlabel('merchant_reg','merchant_id',$d,'merchant_name');
               }),
-              array( 'db' => 'is_returned',     'dt' => 11,'formatter'=>function($d,$row){
-                $date1=date_create(date("Y-m-d"));
-                  $date2=date_create($row['return_date']);
-                  $diff=date_diff($date1,$date2);
-                  $difference = $diff->format("%R%a");
-                  $df = "";
-                  if($d != 1)
-                  {
-                      if($difference < 0)
-                      {
-                          $df = "<span class='badge badge-danger'><i class='fa fa-exclamation'></i> Overdue</span>";
-                      }else
-                      {
-                          $df = "<small>".$difference." days left</small>";
-                      }
-                  }
-                $output = ($d == 0)?"<span class='badge badge-danger'>Not returned</span>":"<span class='badge badge-success'> Returned</span>";
-                return ($row['is_collected'] == 1)?$output.$df:"";
-            }),
-            array( 'db' => 'posted_by',  'dt' => 12 ),
-            array( 'db' => 'payment_mode',  'dt' => 13 ),
-            array( 'db' => 'created',  'dt' => 14 ),
-            array( 'db' => 'transaction_id',  'dt' => 15,'formatter'=>function($d,$row)
+            array( 'db' => 'payment_mode', 'dt' => 5),
+            array( 'db' => 'response_code', 'dt' => 6),
+            array( 'db' => 'response_message', 'dt' => 7),
+            array( 'db' => 'customer_id',     'dt' => 8),
+            array( 'db' => 'order_id', 'dt' => 9),
+            array( 'db' => 'order_id', 'dt' => 10,'formatter'=>function($d,$row)
               {
-                  $return_dress = ($row['is_returned'] == 0 && $row['is_collected'] == 1)?'<button class="btn btn-info" onclick="getModal(\'setup/return_dress.php?trans_id='.$d.'&op=edit&id='.$row[dress_id].'\',\'modal_div\')"  href="javascript:void(0)" data-toggle="modal" data-target="#defaultModalPrimary" >Return Dress</button>':"";
-                  $edit_dress = '<button class="btn btn-warning" onclick="getModal(\'setup/book_dress.php?trans_id='.$d.'&op=edit&id='.$row[dress_id].'\',\'modal_div2\')"  href="javascript:void(0)" data-toggle="modal" data-target="#editing_product" >Edit Dress</button>';
-                  return $return_dress.$edit_dress;
-              } ),
-            array( 'db' => 'is_discounted',  'dt' => -1 ),
-            array( 'db' => 'discount_price',  'dt' => -1 ),
-            array( 'db' => 'is_collected',  'dt' => -1 ),
-            array( 'db' => 'is_payment_full',  'dt' => -1 ),
-            array( 'db' => 'wedding_date',  'dt' => -1 ),
-            array( 'db' => 'items',  'dt' => -1 ),
-            array( 'db' => 'extra_item',  'dt' => -1 ),
-            array( 'db' => 'extra_item_price',  'dt' => -1 ),
+                  $customer = $row['source_acct'];
+                  $split_dist = "<button class='btn btn-secondary' onclick=\"getModal('transaction_details.php?order_id=$d&customer_id=$customer','modal_div2')\" href='javascript:void(0)' data-toggle='modal' data-target='#editing_product'>View Order Details</button>";
+                  return $split_dist;
+              }),
+            array( 'db' => 'created',  'dt' => 11 )
 			);
-      
+       $filter = "";
+		$filter .= ($_SESSION['role_id_sess']=="001" || $_SESSION['role_id_sess']=="005" )?"":" AND destination_acct='$_SESSION[merchant_sess_id]'";
 		
 		$datatableEngine = new engine();
-       $filter = "";
-       if($data['status'] != "")
-       {
-           if($data['status'] == '2')
-           {
-               $filter = $filter." AND  CURDATE() > return_date AND is_returned = '0'"; 
-           }else
-           {
-               $filter = $filter." AND is_returned = '$data[status]'";
-           }
-       }
-//       if($data['branch'] != "")
-//       {
-//           $filter = $filter." AND branch_id = '$data[branch]'";
-//       }
-       if($data['dress'] != "")
-       {
-           $filter = $filter." AND dress_id = '$data[dress]'";
-       }
-       if($data['is_collected'] != "")
-       {
-           $filter = $filter." AND is_collected = '$data[is_collected]'";
-       }
-       if($data['payment_mode'] != "")
-       {
-           $filter = $filter." AND payment_mode = '$data[payment_mode]'";
-       }
-       if($data['booking_id'] != "")
-       {
-           $filter = $filter." AND transaction_id = '$data[booking_id]'";
-       }
-	   $filter_2 = ($_SESSION['role_id_sess'] == "001" || $_SESSION['role_id_sess'] == "002")?"":" AND region = '$_SESSION[region_sess]'";
-       $filter = $filter.$filter_2;
+	
 		echo $datatableEngine->generic_table($data,$table_name,$columner,$filter,$primary_key);
     }
-    public function completePayment($data)
-    {
-        $validation = $this->validate($data, array('amount_paid'=>'required|int'), array('amount_paid'=>'Paying'));
-        if(!$validation['error'])
-        {
-            $amount_paid  = $data['amount_paid'];
-            $posted_by  = $_SESSION['username_sess'];
-            $trans_id     = $data['trans_id'];
-            $booking_amount = $this->getBookingAmount($trans_id);
-            $prev_payment   = $this->getSumInstallmentAmount($trans_id);
-            if(($amount_paid + $prev_payment) > $booking_amount)
-            {
-                return json_encode(array("response_code"=>344,"response_message"=>"The system detected an overpayment. Customer is owing ".($booking_amount - $prev_payment)));
-            }
-            if(($amount_paid + $prev_payment) == $booking_amount)
-            {
-                $this->doUpdate('transaction_table',array('is_payment_full'=>'yes'),[],array('transaction_id'=>$trans_id));
-                $this->doInsert('installment_payment',array("booking_id"=>$trans_id,"amount_paid"=>$amount_paid,"posted_by"=>$posted_by,"created"=>date('Y-m-d h:i:s'),"branch_id"=>""),[]);
-                return json_encode(array("response_code"=>0,"response_message"=>"Payment is now complete"));
-            }elseif(($amount_paid + $prev_payment) < $booking_amount)
-            {
-                $this->doInsert('installment_payment',array("booking_id"=>$trans_id,"amount_paid"=>$amount_paid,"posted_by"=>$posted_by,"created"=>date('Y-m-d h:i:s'),"branch_id"=>""),[]);
-                return json_encode(array("response_code"=>0,"response_message"=>"Payment saved"));
-            }
-        }
-        else
-        {
-            return json_encode(array("response_code"=>34,"response_message"=>$validation['messages'][0]));
-        }
-    }
-    public function getSumInstallmentAmount($booking_id)
-    {
-        $sql = "SELECT SUM(amount_paid) AS paid FROM installment_payment where booking_id = '$booking_id'";
-        $result = $this->db_query($sql);
-        return $result[0]['paid'];
-    }
-    public function getBookingAmount($trans_id)
-    {
-        $sql = "SELECT transaction_amount FROM transaction_table WHERE transaction_id = '$trans_id' LIMIT 1";
-        $result = $this->db_query($sql);
-        return $result[0]['transaction_amount'];
-    }
-    public function collectDress($data)
-    {
-        $trans_id = $data['trans_id'];
-        $collected_by = $data['collected_by'];
-        $dress = $this->doUpdate('transaction_table',array('is_collected'=>'1','collected_date'=>date('Y-m-d h:i:s'),'collected_by'=>$collected_by),array(),array('transaction_id'=>$trans_id));
-
-    }
+    
     public function checkCart($data)
     {
         $data = array("total"=>"", 

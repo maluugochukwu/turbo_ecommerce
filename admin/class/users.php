@@ -8,7 +8,7 @@ class Users extends dbobject{
     public function login($data)
     {
 //        return $this->doLogin($data,array('church_id'),"callfunc");
-        return $this->doLogin($data,array('branch_id','region'));
+        return $this->doLogin($data,array('photo'));
     }
     public function callfunc($row)
     {
@@ -19,7 +19,7 @@ class Users extends dbobject{
     }
     public function doLogin($data,array $extra_fields = array(), $callback = null)
 	{
-		$username = strtolower($data['username']);
+		$username = $data['username'];
 		$password = $data['password'];
         $validate = $this->validate($data,array('username'=>'required|email','password'=>'required'));
         if($validate['error'])
@@ -27,7 +27,7 @@ class Users extends dbobject{
             return json_encode(array('response_code'=>13,'response_message'=>$validate['messages'][0]));
         }
         $more_fields = (count($extra_fields) > 0)?",".implode(',',$extra_fields):"";
-		$sql      = "SELECT username,firstname,lastname,role_id,password,user_locked,user_disabled,pin_missed,day_1,day_2,day_3,day_4,day_5,day_6,day_7,passchg_logon,photo $more_fields FROM userdata WHERE username = '$username' LIMIT 1";
+		$sql      = "SELECT username,firstname,lastname,role_id,password,user_locked,user_disabled,pin_missed,day_1,day_2,day_3,day_4,day_5,day_6,day_7,passchg_logon $more_fields FROM userdata WHERE username = '$username' LIMIT 1";
 		$result   = $this->db_query($sql,true);
 		$count    = count($result); 
 		if($count > 0)
@@ -59,16 +59,15 @@ class Users extends dbobject{
                                     $_SESSION['lastname_sess']   = $result[0]['lastname'];
                                     $_SESSION['sex_sess']        = $result[0]['sex'];
                                     $_SESSION['role_id_sess']    = $result[0]['role_id'];
-                                    $_SESSION['region_sess']    = $result[0]['region'];
                                     $_SESSION['merchant_sess_id']     = $result[0]['merchant_id'];
-                                    $_SESSION['merchant_name_sess']     = str_replace("-"," ",$merchant_info[0]['merchant_name']);
+                                    // $_SESSION['merchant_name_sess']     = str_replace("-"," ",$merchant_info[0]['merchant_name']);
                                     
                                     $_SESSION['photo_file_sess']  = $result[0]['photo'];
                                     $_SESSION['photo_path_sess']  = "img/profile_photo/".$result[0]['photo'];
                                     
                                     $_SESSION['role_id_name']    = $this->getitemlabel('role','role_id',$result[0]['role_id'],'role_name');
 
-                                    $_SESSION['is_registration_complete'] = $merchant_info[0]['is_registration_complete'];
+                                    // $_SESSION['is_registration_complete'] = $merchant_info[0]['is_registration_complete'];
                                     $_SESSION['branch_id'] = $result[0]['branch_id'];
                                     
 
@@ -167,8 +166,8 @@ class Users extends dbobject{
 			array( 'db' => 'username', 'dt' => 1 ),
 			array( 'db' => 'firstname',  'dt' => 2 ),
 			array( 'db' => 'lastname',   'dt' => 3 ),
-			array( 'db' => 'branch_id',   'dt' => 4, 'formatter'=>function($d,$row){
-                return $this->getitemlabel('branch','id',$d,'name');
+			array( 'db' => 'lastname',   'dt' => 4, 'formatter'=>function($d,$row){
+                return $this->getitemlabel('merchant_reg','merchant_id',$d,'merchant_name');
             } ),
 			array( 'db' => 'mobile_phone',   'dt' => 5 ),
 			array( 'db' => 'role_id',   'dt' => 6, 'formatter'=>function($d,$row){
@@ -188,10 +187,9 @@ class Users extends dbobject{
                 
             } ),
 			array( 'db' => 'created',   'dt' => 11 )
-            );
-        $special_role = ($_SESSION['role_id_sess'] == "001")?$_SESSION['role_id_sess']:"002";
-        $filter = " AND role_id NOT IN ('001','$special_role','$_SESSION[role_id_sess]')";
-		$filter .= ($_SESSION['role_id_sess']=="001" || $_SESSION['role_id_sess']=="002" )?"":" AND branch_id='$_SESSION[branch_id]'  ";
+			);
+        $filter = " AND username <> '$_SESSION[username_sess]'";
+		$filter = ($_SESSION['role_id_sess']=="001" || $_SESSION['role_id_sess']=="002" || $_SESSION['role_id_sess']=="005")?" AND username <> '$_SESSION[username_sess]'":" AND merchant_id='$_SESSION[merchant_sess_id]'  AND username <> '$_SESSION[username_sess]'";
         
         $datatableEngine = new engine();
 	
@@ -299,7 +297,6 @@ class Users extends dbobject{
                     );
             if(!$validation['error'])
             {
-                $data['username'] = strtolower($data['username']);
                 $data['email']       = $data['username'];
                 $data['created']     = date('Y-m-d h:i:s');
                 
@@ -589,7 +586,7 @@ class Users extends dbobject{
         }
         if($dbrow['passchg_logon'] == '1')
         {
-            $mssg = array( "mssg"=>"You are required to change your password, follow this link to  <a href='change_psw_logon.php?username={$dbrow[username]}'> change password </a>","code"=>"44");
+            $mssg = array( "mssg"=>"You are required to change your password, follow this link to  <a href='change_psw_logon.php?username={$dbrow['username']}'> change password </a>","code"=>"44");
         }
         return $mssg;
     }
@@ -610,8 +607,41 @@ class Users extends dbobject{
         return json_encode(array("response_code"=>0,"response_message"=>'Check your mail'));
     }
     
-   
-    
+    public function sackUser($data)
+    {
+        $username = $data['username'];
+        $status   = ($data['status'] == 1)?"0":"1";
+        $sql      = "UPDATE userdata SET status = '$status' WHERE username = '$username' LIMIT 1";
+        $cc = $this->db_query($sql,false);
+        if($cc)
+        {
+            return json_encode(array('response_code'=>0,'response_message'=>'Action on user profile is now effective'));
+        }else
+        {
+            return json_encode(array('response_code'=>432,'response_message'=>'Action failed'));
+        }
+        
+    }
+    public function notifyChurchUsers($church_id,array $roles, $msg, $notification_type = "email")
+    {
+        $usersContact = array();
+        if($notification_type == "email")
+        {
+            foreach($roles as $role_value)
+            {
+                $sql    = "SELECT email FROM userdata WHERE church_id = '$church_id' AND role_id = '$role_value' ";
+                $result = $this->db_query($sql);
+//                $usersContact[] = $result[0]['email'];
+//                $msg    = "Good Day Sir/Madam,\n The Accountant has just posted a collection, and needs your approval.\n Kindly login to the portal to approve collection";
+                mail($result[0]['email'],"The Lord's Chosen Charismatic Revival Church::Approval Notification ",$msg);
+            }
+        }
+        elseif($notification_type == "sms")
+        {
+            
+        }
+        
+    }
     public function changeUserStatus($data)
     {
         $username = $data['username'];
@@ -656,7 +686,7 @@ class Users extends dbobject{
             return json_encode(array("response_code"=>20,"response_message"=>$validation['messages'][0]));
         }
     }
-    public function doPasswordChange($data)
+    public function doPasswordChange($data,$rre="")
     {
             $validation = $this->validate($data,
                         array(
@@ -667,7 +697,7 @@ class Users extends dbobject{
                         ),
                         array('confirm_password'=>'Confirm password','current_password'=>'Current Password')
                        );
-           if($data[current_password] == $data[password])
+           if($data['current_password'] == $data['password'])
            {
                $validation['error'] = true;
                $validation['messages'][0] = "Kindly choose a password that is different from your current one.";
@@ -697,7 +727,7 @@ class Users extends dbobject{
                     {
                         if($data['page'] == 'first_login')
                         {
-                            return json_encode(array('response_code'=>0,'response_message'=>'Your password was changed successfully... <a href="index.php">Proceed to login</a>'));
+                            return json_encode(array('response_code'=>0,'response_message'=>'Your password was changed successfully... <a href="index.html">Proceed to login</a>'));
                         }
                         else
                         {

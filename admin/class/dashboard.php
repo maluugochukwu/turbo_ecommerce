@@ -152,8 +152,8 @@ class Dashboard extends dbobject
 
         
         
-        $filter = ($_SESSION['role_id_sess'] == "001" || $_SESSION['role_id_sess'] == "002")?"":" AND branch_id = '$_SESSION[branch_id]'";
-        $sql = "SELECT SUM(transaction_amount) AS amount, MONTH(created) AS trans_month,YEAR(created) AS trans_year  FROM transaction_table WHERE 1 = 1 $filter AND YEAR(created) = YEAR(CURDATE())  GROUP BY MONTH(created),YEAR(created) ORDER BY trans_year ";
+        $filter = ($_SESSION['role_id_sess'] == "001")?"":" AND merchant_id = '$this->merchant_id'";
+        $sql = "SELECT SUM(total_price) AS amount, MONTH(createdon) AS trans_month,YEAR(createdon) AS trans_year  FROM orderdetails WHERE 1 = 1 $filter AND YEAR(createdon) = YEAR(CURDATE())  GROUP BY MONTH(createdon),YEAR(createdon) ORDER BY trans_year ";
         $result = $this->db_query($sql);
         $months = array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
         $data   = array();
@@ -177,7 +177,7 @@ class Dashboard extends dbobject
              $current_year_amt[] = $amt;
         }
         
-        $sql = "SELECT SUM(transaction_amount) AS amount, MONTH(created) AS trans_month,YEAR(created) AS trans_year  FROM transaction_table WHERE 1 = 1 $filter AND YEAR(created) = YEAR(CURDATE()) - 1  GROUP BY MONTH(created),YEAR(created) ORDER BY trans_year ";
+        $sql = "SELECT SUM(total_price) AS amount, MONTH(createdon) AS trans_month,YEAR(createdon) AS trans_year  FROM orderdetails WHERE 1 = 1 $filter AND YEAR(createdon) = YEAR(CURDATE()) - 1  GROUP BY MONTH(createdon),YEAR(createdon) ORDER BY trans_year ";
         $result = $this->db_query($sql);
         foreach($months as $k=>$v)
         {
@@ -208,8 +208,8 @@ class Dashboard extends dbobject
     }
     public function stateHeatMap($data)
     {
-//        $filter = ($_SESSION['role_id_sess'] == "001" || $_SESSION['role_id_sess'] == "002")?"":" AND branch_id = '$_SESSION[branch_id]'";
-        $filter = "";
+        $filter = ($_SESSION['role_id_sess'] == "001")?"":" AND merchant_id = '$this->merchant_id'";
+//        $filter = "";
         $output = array();
         
         
@@ -220,7 +220,7 @@ class Dashboard extends dbobject
             foreach($ss_result as $rr)
             {
                 $state_code = $rr['state_code'];
-                $sql = "SELECT COUNT(state_id) AS heat_count,state_id FROM transaction_table WHERE  response_code = '0' AND state_id = '$state_code' $filter  ";
+                $sql = "SELECT COUNT(customer_state) AS heat_count,customer_state FROM orderdetails WHERE  payment = '1' AND customer_state = '$state_code' $filter  ";
                 $result = $this->db_query($sql);
                 $heat_c  = (int)$result[0]['heat_count'];
                 $output[] = array($rr['highchart_code'],$heat_c);
@@ -236,9 +236,9 @@ class Dashboard extends dbobject
     {
         
 //        $filter = ($_SESSION['role_id_sess'] == 001)?"":" AND church_id = '$_SESSION[church_id_sess]'";
-        $filter = ($_SESSION['role_id_sess'] == "001" || $_SESSION['role_id_sess'] == "002")?"":" AND branch_id = '$_SESSION[branch_id]'";
+        $filter = ($_SESSION['role_id_sess'] == "001")?"":" AND merchant_id = '$this->merchant_id'";
         
-        $sql    = "SELECT SUM(transaction_amount) AS amount, COUNT(transaction_id) AS trans_count, MONTH(created) AS trans_month  FROM transaction_table WHERE 1 = 1  $filter AND YEAR(created) = YEAR(CURDATE())  GROUP BY MONTH(created)";
+        $sql    = "SELECT SUM(total_price) AS amount, COUNT(id) AS trans_count, MONTH(createdon) AS trans_month  FROM orderdetails WHERE 1 = 1 AND payment = '1' $filter AND YEAR(createdon) = YEAR(CURDATE())  GROUP BY MONTH(createdon)";
         $result = $this->db_query($sql);
         $months = array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
         $data   = array();

@@ -64,7 +64,8 @@ else
                <div class="form-group">
                     <label for="">Notification Type</label>
                     <select name="type"  class="form-control">
-                        <option value="TRANSACTION">TRANSACTION</option>
+                        <option <?php echo ($branch[0]['type'] == "CONTACT FORM")?"selected":""; ?> value="CONTACT FORM">CONTACT FORM</option>
+                        
                     </select>
                 </div>
            </div>
@@ -116,7 +117,6 @@ else
             
              if(rr.response_code == 0)
                 {
-                    menuStates.branch.isSaved = 1;
                     swal({
                         text:rr.response_message,
                         icon:"success"

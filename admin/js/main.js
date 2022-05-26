@@ -920,7 +920,7 @@ function callpagepost(str,divid){
 
 function getpage(str,divid) 
 { 
-//	$.ajax({type:'POST',url:'utilities.php',success:function(msg,textStatus, xhr){console.log(xhr.status); if(xhr.status == 302){window.location = "logout.php"}}})
+	$.ajax({type:'POST',url:'utilities.php',success:function(msg,textStatus, xhr){console.log(xhr.status); if(xhr.status == 302){window.location = "logout.php"}}})
 			if(str!='#'){
 				$.blockUI({ message:'<img src="images/loading.gif" alt=""/>&nbsp;&nbsp;loading please wait . . .'});
 				//$("#display_message").html('<img src="images/loading.gif" alt="" />loading please wait . . .');
@@ -1155,7 +1155,7 @@ function printDiv(seldiv)
   var divToPrint=document.getElementById(seldiv);
   var newWin=window.open();
   newWin.document.open();
-  newWin.document.write('<html><link rel="stylesheet" type="text/css" href="css/classic.css"><link rel="stylesheet" type="text/css" href="vendor/bootstrap/dist/css/bootstrap.css"></link><link rel="stylesheet" type="text/css" href="css/printcss.css"></link><body><div class="block-fluid clearfix">'+divToPrint.innerHTML+'</div></body></html>');
+  newWin.document.write('<html><link rel="stylesheet" type="text/css" href="styles/style.css"><link rel="stylesheet" type="text/css" href="vendor/bootstrap/dist/css/bootstrap.css"></link><link rel="stylesheet" type="text/css" href="css/printcss.css"></link><body><div class="block-fluid clearfix">'+divToPrint.innerHTML+'</div></body></html>');
   newWin.document.close();
   //setTimeout(function(){newWin.close();},20);
 }

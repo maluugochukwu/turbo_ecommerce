@@ -8,8 +8,7 @@ $dotenv->load();
 
 
 include_once('class/users.php');
-//include_once('class/merchant.php');
-//include_once('class/notification.php');
+include_once('class/notification.php');
 
 // User.login
 $op = $_REQUEST['op'];

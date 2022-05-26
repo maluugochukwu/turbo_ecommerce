@@ -1,0 +1,4 @@
+<?php
+$dd = '{"data":[{"id_customer_address_city":"2493","name":"Akoko"},{"id_customer_address_city":"2494","name":"Akure North"},{"id_customer_address_city":"2495","name":"Akure South"},{"id_customer_address_city":"2878","name":"Ese Odo"},{"id_customer_address_city":"2559","name":"Idanre"},{"id_customer_address_city":"2496","name":"Ifedore"},{"id_customer_address_city":"116","name":"IGBOKODA"},{"id_customer_address_city":"2497","name":"Illaje"},{"id_customer_address_city":"2498","name":"Irele"},{"id_customer_address_city":"2499","name":"Odigbo"},{"id_customer_address_city":"2500","name":"Okitipipa"},{"id_customer_address_city":"258","name":"ORE"},{"id_customer_address_city":"2501","name":"Ose"},{"id_customer_address_city":"2503","name":"Owo"}]}';
+
+var_dump(json_decode($dd,TRUE));

@@ -2,8 +2,8 @@
 include_once("../libs/dbfunctions.php");
 include_once("../class/menu.php");
 $dbobject = new dbobject();
-$sql = "SELECT DISTINCT(State) as state,stateid FROM lga order by State";
-$states = $dbobject->db_query($sql);
+//$sql = "SELECT DISTINCT(State) as state,stateid FROM lga order by State";
+//$states = $dbobject->db_query($sql);
 //
 //$sql2 = "SELECT bank_code,bank_name FROM banks WHERE bank_type = 'commercial' order by bank_name";
 //$banks = $dbobject->db_query($sql2);
@@ -11,16 +11,16 @@ $states = $dbobject->db_query($sql);
 //$sql_pastor = "SELECT username,firstname,lastname FROM userdata WHERE role_id = '003'";
 //$pastors = $dbobject->db_query($sql_pastor);
 
-// $sql = "SELECT * FROM font_awsome ORDER BY code ";
-// $fonts = $dbobject->db_query($sql);
+$sql = "SELECT * FROM font_awsome ORDER BY code ";
+$fonts = $dbobject->db_query($sql);
 
 
 if(isset($_REQUEST['op']) && $_REQUEST['op'] == 'edit')
 {
     $operation = 'edit';
-    $id = $_REQUEST['id'];
-    $sql_menu = "SELECT * FROM lga_communities WHERE id = '$id' LIMIT 1";
-    $community = $dbobject->db_query($sql_menu);
+    $role_id = $_REQUEST['role_id'];
+    $sql_menu = "SELECT * FROM role WHERE role_id = '$role_id' LIMIT 1";
+    $role = $dbobject->db_query($sql_menu);
 }else
 {
     $operation = 'new';
@@ -47,30 +47,17 @@ function doOnLoad()
 </div>
 <div class="modal-body m-3 ">
     <form id="form1" onsubmit="return false">
-       <input type="hidden" name="op" value="Helper.saveCommunity">
+       <input type="hidden" name="op" value="Role.saveRole">
        <input type="hidden" name="operation" value="<?php echo $operation; ?>">
-       <input type="hidden" name="id" value="<?php echo $id; ?>">
+       <input type="hidden" name="role_id" value="<?php echo $role_id; ?>">
        <div class="row">
            <div class="col-sm-6">
                <div class="form-group">
-                    <label class="form-label">Community Name</label>
-                    <input type="text" autocomplete="off" name="name"  value="<?php echo $community[0]['name']; ?>"  class="form-control" />
+                    <label class="form-label">Role Name</label>
+                    <input type="text" autocomplete="off" name="role_name"  value="<?php echo $role[0]['role_name']; ?>"  class="form-control" />
                 </div>
            </div>
-           <div class="col-sm-6">
-               <div class="form-group">
-                    <label class="form-label">State</label>
-                    <select name="state_id" id="state_id" class="form-control">
-                        <?php
-                            foreach($states as $row)
-                            {
-                                echo '<option value="'.$row['state_code'].'">'.$row['State'].'</option>';
-                            }
-                        ?>
-                        
-                    </select>
-                </div>
-           </div>
+           
            
        </div>
       

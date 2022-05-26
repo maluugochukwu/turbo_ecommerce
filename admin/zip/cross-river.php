@@ -1,0 +1,4 @@
+<?php
+$dd = '{"data":[{"id_customer_address_city":"1512","name":"Abi"},{"id_customer_address_city":"1513","name":"Akamkpa"},{"id_customer_address_city":"1514","name":"Akpabuyo"},{"id_customer_address_city":"1515","name":"Bakassi"},{"id_customer_address_city":"1516","name":"Bekwarra"},{"id_customer_address_city":"1517","name":"Biase"},{"id_customer_address_city":"1518","name":"Boki"},{"id_customer_address_city":"2635","name":"Calabar"},{"id_customer_address_city":"1519","name":"Etung"},{"id_customer_address_city":"1520","name":"Ikom"},{"id_customer_address_city":"1521","name":"Obanliku"},{"id_customer_address_city":"1522","name":"Obubra"},{"id_customer_address_city":"1523","name":"Obudu"},{"id_customer_address_city":"1524","name":"Odukpani"},{"id_customer_address_city":"1525","name":"Ogoja"},{"id_customer_address_city":"1526","name":"Yakuur"},{"id_customer_address_city":"1527","name":"Yala"}]}';
+
+var_dump(json_decode($dd,TRUE));

@@ -179,9 +179,9 @@ class Menu extends dbobject
         {
             foreach($result as $row)
            {
-            $visible = $visible.'<div class="form-group" draggable="true" ondragstart="drag(event)" id="tt'.$row[menu_id].'">
-                          <div>'.$row[menu_name].'</div>
-                          <input type="hidden" name="menus[]" value="'.$row[menu_id].'" class="form-group" />
+            $visible = $visible.'<div class="form-group" draggable="true" ondragstart="drag(event)" id="tt'.$row['menu_id'].'">
+                          <div>'.$row['menu_name'].'</div>
+                          <input type="hidden" name="menus[]" value="'.$row['menu_id'].'" class="form-group" />
                       </div>';
             }
         }
@@ -191,16 +191,17 @@ class Menu extends dbobject
     
     private function inVisibleMenus($role_id)
     {
-        $sql     = "SELECT menu_id,menu_name FROM menu WHERE menu_id NOT IN (SELECT menu_id FROM menugroup WHERE role_id = '$role_id') order by menu_name";
+        $filter = ($_SESSION['role_id_sess'] == "001")?"":" AND menu_id <> '007'";
+        $sql     = "SELECT menu_id,menu_name FROM menu WHERE menu_id NOT IN (SELECT menu_id FROM menugroup WHERE role_id = '$role_id') $filter order by menu_name";
         $result  = $this->db_query($sql);
         $invisible = '';
         if(count($result) > 0)
         {
             foreach($result as $row)
             {
-            $invisible = $invisible.'<div class="form-group" draggable="true" ondragstart="drag(event)" id="tt'.$row[menu_id].'">
-                          <div>'.$row[menu_name].'</div>
-                          <input type="hidden" name="menus[]" value="'.$row[menu_id].'" class="form-group" />
+            $invisible = $invisible.'<div class="form-group" draggable="true" ondragstart="drag(event)" id="tt'.$row['menu_id'].'">
+                          <div>'.$row['menu_name'].'</div>
+                          <input type="hidden" name="menus[]" value="'.$row['menu_id'].'" class="form-group" />
                       </div>';
            }
         }
